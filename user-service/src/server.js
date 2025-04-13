@@ -1,17 +1,50 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import userRoutes from './routes/userRoutes.js';
+import sequelize from './db/sequelize.js';
+import { logger, httpLogger } from './middleware/logger.js';
+import { errorHandler, notFound } from './middleware/errorMiddleware.js';
+import cookieParser from 'cookie-parser';
+
+// import './models/index.js';
 
 dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-const app = express()
-const PORT = process.env.PORT || 3001;
+app.use(express.json());
+app.use(httpLogger);
+app.use(cookieParser());
 
-app.use(express.json())
+// API Versioning
+app.use(`/user`, userRoutes);
 
-app.get('/', (req, res) => {
-  res.send('User Service is running...');
+// Healthcheck route
+app.get('/health', async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    res.status(200).json({ status: 'ok' });
+  } catch (err) {
+    console.error('Healthcheck failed:', err);
+    res.status(500).json({ status: 'error', message: 'Database connection failed' });
+  }
 });
 
-app.listen(PORT, () => {
-  console.log(`User Service is listening on port ${PORT}`);
-});
+app.use(notFound);
+app.use(errorHandler);
+
+const startServer = async () => {
+  try {
+    await sequelize.sync({ alter: true }); // or { force: true } for dev resets
+    logger.info('Database synced');
+
+    app.listen(PORT, () => {
+      logger.info(`User Service running at http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    logger.error('DB sync failed:', err);
+    process.exit(1); // Optional: exit on failure
+  }
+}
+
+startServer();

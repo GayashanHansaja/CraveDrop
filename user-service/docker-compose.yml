@@ -1,0 +1,62 @@
+services:
+  user-service:
+    image: nmdra/user-service
+    build:
+      context: .
+      target: development 
+    container_name: user-service
+    hostname: user-service
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env
+    command: yarn dev
+    develop:
+      watch:
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: yarn.lock
+        - action: sync+restart
+          path: src/server.js
+          target: /app/server.js
+        - action: sync
+          path: src
+          target: /app
+          ignore:
+            - node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cravedrop-network
+  
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d userdb"]
+      interval: 10s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    ports:
+      - "5432:5432"
+    networks:
+      - cravedrop-network 
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+
+networks:
+  cravedrop-network:
+    driver: bridge
+  
+
