@@ -1,0 +1,115 @@
+services:
+  notification-service:
+    image: nmdra/notification-service
+    build:
+      context: ./notification-service
+      target: development 
+    container_name: notification-service
+    hostname: notification-service
+    ports:
+      - "3004:3000"
+    env_file:
+      - ./notification-service/.env
+    command: yarn dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./notification-service/package.json
+        - action: rebuild
+          path: ./notification-service/yarn.lock
+        - action: sync+restart
+          path: ./notification-service/src/server.js
+          target: /app/server.js
+        - action: sync
+          path: ./notification-service/src
+          target: /app
+          ignore:
+            - node_modules
+    depends_on:
+      postgres-notification:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - cravedrop-network
+
+  email-service:
+    image: nmdra/email-service
+    build:
+      context: ./email-service
+      target: development 
+    container_name: email-service
+    hostname: email-service
+    ports:
+      - "3005:3000"
+    env_file:
+      - ./email-service/.env
+    command: yarn dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./email-service/package.json
+        - action: rebuild
+          path: ./email-service/yarn.lock
+        - action: sync+restart
+          path: ./email-service/src/index.js
+          target: /app/index.js
+        - action: sync
+          path: ./email-service/src
+          target: /app
+          ignore:
+            - node_modules
+    depends_on:
+      postgres-notification:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - cravedrop-network
+
+  postgres-notification:
+    image: postgres:alpine
+    container_name: postgres-nf
+    hostname: postgres-nf
+    environment:
+      POSTGRES_DB: ${DB_NAME:-notification}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d notification"]
+      interval: 10s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    ports:
+      - "5432:5432"
+    networks:
+      - cravedrop-network 
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672" # RabbitMQ management UI
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-guest}
+    networks:
+      - cravedrop-network 
+
+volumes:
+  pg_data:
+
+networks:
+  cravedrop-network:
+    driver: bridge
