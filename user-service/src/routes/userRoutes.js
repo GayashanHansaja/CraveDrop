@@ -7,16 +7,18 @@ import { authenticateUser } from '../middleware/authMiddleware.js';
 const router = Router();
 
 // User routes
-router.post('/', registerUserValidator, registerUser);
-router.get('/', authenticateUser, getUserProfile);
-router.put('/', authenticateUser, updateUserValidator, validate, updateUser)
-router.delete('/', authenticateUser, deleteUserAccount)
+router
+    .route('')
+    .post(registerUserValidator, registerUser)
+    .put(authenticateUser, updateUserValidator, updateUser)
+    .delete(authenticateUser, deleteUserAccount)
+    .get(authenticateUser, getUserProfile)
 
 // Auth routes
-router.post('/auth', auth)
-router.post('/refresh', refreshToken);
-router.get('/validate', validate)
+router.route('/auth').post(auth)
+router.route('/refresh').post(refreshToken);
+router.route('/validate').get(validate)
 
-router.get('/:id', getUserById)
+// router.route('/:id').get(getUserById)
 
 export default router;

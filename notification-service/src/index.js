@@ -12,11 +12,11 @@ app.use(httpLogger);
 
 const PORT = process.env.PORT || 3000;
 
-app.use('/notify', notificationRoutes);
-
-app.get('/health', (req, res) => {
+app.get('/notify/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });
+
+app.use('/notify', notificationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
