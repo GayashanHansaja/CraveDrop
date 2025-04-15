@@ -6,21 +6,17 @@ import { logger, httpLogger } from './middleware/logger.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import cookieParser from 'cookie-parser';
 
-// import './models/index.js';
-
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(httpLogger);
 app.use(cookieParser());
 
-// API Versioning
-app.use(`/user`, userRoutes);
-
 // Healthcheck route
-app.get('/health', async (req, res) => {
+app.get('/user/health', async (req, res) => {
   try {
     await sequelize.authenticate();
     res.status(200).json({ status: 'ok' });
@@ -29,6 +25,9 @@ app.get('/health', async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Database connection failed' });
   }
 });
+
+// API Versioning
+app.use(`/user/`, userRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
