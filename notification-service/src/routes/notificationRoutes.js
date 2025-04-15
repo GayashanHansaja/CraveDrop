@@ -1,7 +1,7 @@
 import express from 'express';
 import {
     sendNotification,
-    getNotificationsByUserId
+    getNotificationsByUserId,
 } from '../controllers/notificationController.js';
 
 const router = express.Router();

@@ -25,7 +25,7 @@ app.get('/health', async (req, res) => {
     await sequelize.authenticate();
     res.status(200).json({ status: 'ok' });
   } catch (err) {
-    console.error('Healthcheck failed:', err);
+    logger.error('Healthcheck failed:', err);
     res.status(500).json({ status: 'error', message: 'Database connection failed' });
   }
 });
@@ -39,7 +39,7 @@ const startServer = async () => {
     logger.info('Database synced');
 
     app.listen(PORT, () => {
-      logger.info(`User Service running at http://localhost:${PORT}`);
+      logger.info(`User Service running at port: ${PORT}`);
     });
   } catch (err) {
     logger.error('DB sync failed:', err);
