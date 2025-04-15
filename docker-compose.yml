@@ -1,4 +1,36 @@
 services:
+  user-service:
+    image: nmdra/user-service
+    build:
+      context: ./user-service
+      target: development 
+    container_name: user-service
+    hostname: user-service
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./user-service/.env
+    command: yarn dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./user-service/package.json
+        - action: rebuild
+          path: ./user-service/yarn.lock
+        - action: sync+restart
+          path: ./user-service/src/server.js
+          target: /app/server.js
+        - action: sync
+          path: ./user-service/src
+          target: /app
+          ignore:
+            - node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cravedrop-network
+  
   notification-service:
     image: nmdra/notification-service
     build:
@@ -26,7 +58,7 @@ services:
           ignore:
             - node_modules
     depends_on:
-      postgres-notification:
+      postgres:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
@@ -60,23 +92,53 @@ services:
           ignore:
             - node_modules
     depends_on:
-      postgres-notification:
-        condition: service_healthy
       rabbitmq:
         condition: service_healthy
     networks:
       - cravedrop-network
 
-  postgres-notification:
+  sms-service:
+    image: nmdra/sms-service
+    build:
+      context: ./sms-service
+      target: development 
+    container_name: sms-service
+    hostname: sms-service
+    ports:
+      - "3006:3000"
+    env_file:
+      - ./sms-service/.env
+    command: yarn dev
+    develop:
+      watch:
+        - action: rebuild
+          path: ./sms-service/package.json
+        - action: rebuild
+          path: ./sms-service/yarn.lock
+        - action: sync+restart
+          path: ./sms-service/src/index.js
+          target: /app/index.js
+        - action: sync
+          path: ./sms-service/src
+          target: /app
+          ignore:
+            - node_modules
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - cravedrop-network
+
+  postgres:
     image: postgres:alpine
-    container_name: postgres-nf
-    hostname: postgres-nf
+    container_name: postgres
+    hostname: postgres
     environment:
-      POSTGRES_DB: ${DB_NAME:-notification}
+      POSTGRES_DB: ${DB_NAME:-cravedrop_db}
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASS:-postgres}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d notification"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cravedrop_db"]
       interval: 10s
       retries: 3
       start_period: 10s
