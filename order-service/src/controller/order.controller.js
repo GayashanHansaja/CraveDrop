@@ -1,5 +1,7 @@
 import Order from '../model/order.model.js';
 import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const createOrder = async (req, res) => {
   try {
@@ -10,7 +12,7 @@ export const createOrder = async (req, res) => {
     }
 
     // Call the Payment Service
-    const paymentResponse = await axios.post('http://payment-service:5002/api/v1/payment/create-payment-intent', {
+    const paymentResponse = await axios.post(process.env.PAYMENT_SERVICE_URL, {
       amount,
       currency,
     });
