@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import connectDB from './src/service/db.js';
-import orderRoutes from './src/routes/order.route.js';
+import connectDB from './service/db.js';
+import orderRoutes from './routes/order.route.js';
 
 dotenv.config();
 const app = express();
@@ -14,5 +14,5 @@ app.use('/api/v1/orders', orderRoutes);
 
 // Connect MongoDB and start server
 connectDB().then(() => {
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });

@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import paymentRoutes from './src/routes/payment.route.js';
+import paymentRoutes from './routes/payment.route.js';
 
 dotenv.config();
 

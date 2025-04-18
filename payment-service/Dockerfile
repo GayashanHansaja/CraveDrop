@@ -1,12 +1,12 @@
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
-copy package*.json ./
+COPY package*.json ./
 
 RUN npm install
 
-copy . .
+COPY . .
 
 EXPOSE 5002
 
