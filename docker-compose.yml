@@ -183,7 +183,7 @@ services:
       rabbitmq:
         condition: service_healthy
     ports:
-      - "80:80"
+      - "5000:5000"
     networks:
       - cravedrop-network
 

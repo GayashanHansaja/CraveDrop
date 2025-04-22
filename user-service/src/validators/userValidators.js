@@ -18,7 +18,7 @@ export const registerUserValidator = [
         .matches(/\d/).withMessage('Password must contain at least one number')
         .matches(/[!@#$%^&*()_\-+=<>?{}[\]~]/).withMessage('Password must contain a special character'),
     body('contactNumber')
-        .notEmpty().withMessage('Contact number is required')
+        .optional()
         .matches(sriLankaMobileRegex).withMessage(
             'Invalid Sri Lankan mobile number. Must start with 07 and have 10 digits.'
         ),

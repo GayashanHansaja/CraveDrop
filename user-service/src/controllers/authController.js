@@ -24,7 +24,11 @@ export const auth = async (req, res) => {
         .status(StatusCodes.OK)
         .json({
             status: 'success',
-            message: 'Authentication successful',
+            user: {
+                userId: user.userId,
+                firstname: user.firstname,
+                pic: user.pic,
+            },
             accessToken
         });
 }
@@ -69,4 +73,17 @@ export const validate = (req, res) => {
     } catch (err) {
         return res.sendStatus(StatusCodes.UNAUTHORIZED);
     }
+}
+
+export const logout = (req, res) => {
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV !== 'development',
+    });
+
+    res.status(StatusCodes.OK).json({
+        status: 'success',
+        message: 'Logged out successfully.',
+    });
 }
