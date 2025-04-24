@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
+import internalRoutes from './routes/internalRoutes.js'
 import sequelize from './db/sequelize.js';
 import { logger, httpLogger } from './middleware/logger.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
@@ -28,6 +29,7 @@ app.get('/user/health', async (req, res) => {
 
 // API Versioning
 app.use(`/user/`, userRoutes);
+app.use(`/internal/user`, internalRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

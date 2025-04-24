@@ -1,20 +1,27 @@
-# Stage 1: Build stage
-FROM node:22-alpine3.20 AS builder
+# Step 1: Build the app with Vite using Yarn
+FROM node:22-alpine AS builder
 
-# Set the working directory
 WORKDIR /app
 
-# Copy only package.json and package-lock.json to leverage Docker caching
-COPY package*.json ./
+# Install dependencies using Yarn
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production=true
 
-# Install dependencies
-RUN npm install
+# Copy the rest of the project
+COPY ./src .
 
-# Copy the rest of the application source code
-COPY . .
+# Build the app
+RUN yarn build
 
-# Expose the necessary port
-EXPOSE 3001
+# Step 2: Serve the app with Nginx
+FROM nginx:alpine AS production
 
-# Serve the built application
-CMD ["npm", "run", "dev"]
+# Copy built app from builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Optional: Custom Nginx config for SPA routing
+COPY Nginx/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
