@@ -178,8 +178,8 @@ services:
         condition: service_started
       notification-service:
         condition: service_started
-      postgres:
-        condition: service_healthy
+      # postgres:
+      #   condition: service_healthy
       rabbitmq:
         condition: service_healthy
     ports:
