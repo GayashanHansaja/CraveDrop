@@ -14,4 +14,4 @@ export const process = [
         title: 'Fast Delivery',
         desc: 'Our delivery team picks up your order and brings it straight to your doorstep—hot, fresh, and ready to eat.',
     },
-];
+]

@@ -1,20 +1,20 @@
-import { Outlet } from "react-router-dom";
-import Sidebar from "../Components/User/Sidebar";
+import { Outlet } from 'react-router-dom'
+import Sidebar from '../Components/User/Sidebar'
 
 const SidebarLayout = () => {
-  return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg z-10">
-        <Sidebar />
-      </aside>
+    return (
+        <div className="flex h-screen bg-gray-100">
+            {/* Sidebar */}
+            <aside className="z-10 w-64 bg-white shadow-lg">
+                <Sidebar />
+            </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-6">
-        <Outlet />
-      </main>
-    </div>
-  );
-};
+            {/* Main Content */}
+            <main className="flex-1 overflow-y-auto p-6">
+                <Outlet />
+            </main>
+        </div>
+    )
+}
 
-export default SidebarLayout;
+export default SidebarLayout
