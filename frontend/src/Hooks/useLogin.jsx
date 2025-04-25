@@ -29,7 +29,7 @@ export const useLogin = () => {
             dispatch({ type: 'LOGIN', payload: { user, token: accessToken } })
 
             setIsLoading(false)
-            navigate('/userDashboard')
+            navigate('/dashboard')
         } catch (error) {
             console.error(error)
             if (

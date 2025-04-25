@@ -3,10 +3,12 @@ import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import OrderTable from '../../Components/User/OrderTable'
 import { orders as mockOrders } from '../../mock/order'
+import SkeletonTable from '../../Components/User/SkeletonTable'
 
 // Initialize mock adapter
 const mock = new MockAdapter(axios, { delayResponse: 1000 }) // Optional delay
 mock.onGet('/api/orders').reply(200, mockOrders)
+mock.onAny().passThrough()
 
 const SkeletonRow = () => (
     <tr className="animate-pulse">
@@ -23,26 +25,6 @@ const SkeletonRow = () => (
             <div className="h-4 w-20 rounded bg-gray-300" />
         </td>
     </tr>
-)
-
-const SkeletonTable = () => (
-    <div className="overflow-x-auto">
-        <table className="min-w-full rounded-lg border border-gray-200 bg-white shadow">
-            <thead className="bg-gray-100">
-                <tr>
-                    <th className="border-b p-3 text-left">Order ID</th>
-                    <th className="border-b p-3 text-left">Total</th>
-                    <th className="border-b p-3 text-left">Date</th>
-                    <th className="border-b p-3 text-left">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {[...Array(5)].map((_, idx) => (
-                    <SkeletonRow key={idx} />
-                ))}
-            </tbody>
-        </table>
-    </div>
 )
 
 const Orders = () => {

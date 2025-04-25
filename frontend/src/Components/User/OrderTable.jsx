@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { FiCheckCircle } from 'react-icons/fi'
 
 // Function to get badge color based on the order status
 const getStatusBadgeColor = (status) => {
@@ -91,39 +93,59 @@ const OrderTable = ({ orders }) => {
             </div>
 
             {/* Orders Table */}
-            <div className="overflow-x-auto">
-                <table className="min-w-full rounded-lg border border-gray-200 bg-white shadow-lg">
-                    <thead className="bg-gray-100">
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-left text-sm text-gray-500 rtl:text-right">
+                    <thead className="bg-gray-50 text-xs text-gray-700 uppercase">
                         <tr>
-                            <th className="border-b p-3 text-left">Order ID</th>
-                            <th className="border-b p-3 text-left">Total</th>
-                            <th className="border-b p-3 text-left">Date</th>
-                            <th className="border-b p-3 text-left">Status</th>
+                            <th scope="col" className="px-6 py-3">
+                                Order ID
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Total
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Date
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Status
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {currentOrders.map((order) => (
                             <tr
                                 key={order.orderId}
-                                className="border-b hover:bg-gray-50"
+                                className="border-b border-gray-200 bg-white hover:bg-gray-50"
                             >
-                                <td className="p-3">{order.orderId}</td>
-                                <td className="p-3">
-                                    ${order.total.toFixed(2)}
+                                <td className="px-6 py-4 font-medium whitespace-nowrap text-gray-900">
+                                    {order.orderId}
                                 </td>
-                                <td className="p-3">
+                                <td className="px-6 py-4">
+                                    Rs.{order.total.toFixed(2)}
+                                </td>
+                                <td className="px-6 py-4">
                                     {new Date(
                                         order.createdAt
                                     ).toLocaleDateString()}
                                 </td>
-                                <td className="p-3">
+                                <td className="px-6 py-4">
                                     <span
-                                        className={`rounded-full px-2 py-1 text-sm ${getStatusBadgeColor(
-                                            order.status
-                                        )}`}
+                                        className={`rounded-full px-2 py-1 text-sm ${getStatusBadgeColor(order.status)}`}
                                     >
                                         {order.status}
                                     </span>
+                                </td>
+                                <td className="px-6 py-4 text-right">
+                                    <Link
+                                        to={`/orders/${order.orderId}`}
+                                        className="flex items-center gap-1 font-medium text-blue-600 hover:underline"
+                                    >
+                                        <FiCheckCircle />
+                                        View Order
+                                    </Link>
                                 </td>
                             </tr>
                         ))}

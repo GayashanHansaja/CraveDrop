@@ -6,9 +6,8 @@ import foodData from '../../mock/shop'
 
 // Initialize mock adapter
 const mock = new MockAdapter(axios, { delayResponse: 1000 }) // optional delay
-
-// Mock data
 mock.onGet('/api/foods').reply(200, foodData)
+mock.onAny().passThrough()
 
 const FoodList = () => {
     const [foods, setFoods] = useState([])

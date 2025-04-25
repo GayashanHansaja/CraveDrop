@@ -18,6 +18,7 @@ import Settings from './Pages/Customer/Settings'
 import Orders from './Pages/Customer/Orders'
 import Notifications from './Pages/Customer/Notifications'
 import SidebarLayout from './Layouts/SidebarLayout'
+import OrderSummary from './Pages/Customer/OrderSummary'
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
                     <Route path="settings" element={<Settings />} />
                     <Route path="orders" element={<Orders />} />
                     <Route path="notifications" element={<Notifications />} />
+                    <Route path="/orders/:orderId" element={<OrderSummary />} />
                 </Route>
 
                 {/* Catch-all for 404 */}
