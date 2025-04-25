@@ -5,10 +5,11 @@ WORKDIR /app
 
 # Install dependencies using Yarn
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --production=true
+
+RUN yarn install
 
 # Copy the rest of the project
-COPY ./src .
+COPY . .
 
 # Build the app
 RUN yarn build
