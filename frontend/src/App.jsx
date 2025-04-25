@@ -15,6 +15,9 @@ import Login from "./Pages/Customer/LoginForm";
 import Register from "./Pages/Customer/RegisterForm";
 import Dashboard from "./Pages/Customer/UserDashboard";
 import Settings from "./Pages/Customer/Settings";
+import Orders from "./Pages/Customer/Orders";
+import Notifications from "./Pages/Customer/Notifications";
+import SidebarLayout from "./Layouts/SidebarLayout";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,8 +27,13 @@ const router = createBrowserRouter(
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/userDashboard" element={<Dashboard />} />
-        <Route path="/settings" element={<Settings />} />
+
+        <Route element={<SidebarLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="notifications" element={<Notifications />} />
+        </Route>
 
         {/* Catch-all for 404 */}
         <Route path="*" element={<NotFound />} />
