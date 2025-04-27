@@ -2,7 +2,7 @@
 
 # Define variables for customization
 variable "REGISTRY" {
-  default = "nmdra"
+  default = "ghcr.io/nmdra"
 }
 
 variable "TAG" {
