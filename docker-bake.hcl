@@ -1,5 +1,8 @@
 # docker-bake.hcl
 
+# local override
+# export REGISTRY=nmdra && docker buildx bake --print
+
 # Define variables for customization
 variable "REGISTRY" {
   default = "ghcr.io/nmdra"
