@@ -63,7 +63,7 @@ export const createOrder = async (req, res) => {
   }
 };
 
-  
+
 
 export const getOrderById = async (req, res) => {
   try {
@@ -102,11 +102,11 @@ export const deleteOrder = async (req, res) => {
 };
 
 export const getAllOrders = async (req, res) => {
-    try {
-      const orders = await Order.find(); // Fetch all orders from the database
-      res.status(200).json(orders);
-    } catch (error) {
-      console.error('Get all orders failed:', error);
-      res.status(500).json({ message: 'Something went wrong' });
-    }
+  try {
+    const orders = await Order.find(); // Fetch all orders from the database
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error('Get all orders failed:', error);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
 };

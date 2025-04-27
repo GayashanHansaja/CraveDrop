@@ -210,7 +210,7 @@ function Dashboard() {
                     </p>
                 ) : (
                     <div className="space-y-4">
-                        {mockOrders.map((order) => (
+                        {mockOrders.slice(0, 2).map((order) => (
                             <Link
                                 key={order.orderId}
                                 to={`/orders/${order.orderId}`}
@@ -236,6 +236,15 @@ function Dashboard() {
                                 </p>
                             </Link>
                         ))}
+
+                        <div className="pt-2">
+                            <Link
+                                to="/orders"
+                                className="inline-block rounded bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+                            >
+                                View All Orders
+                            </Link>
+                        </div>
                     </div>
                 )}
             </div>

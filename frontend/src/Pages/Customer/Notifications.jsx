@@ -1,44 +1,37 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import useSWR from 'swr'
 import { FiBell, FiCheckCircle, FiX } from 'react-icons/fi'
 
-const mockNotifications = [
-    {
-        id: 1,
-        message: 'Your order #123456 has been shipped!',
-        createdAt: '2025-04-20T12:34:56.789Z',
-        read: false,
-    },
-    {
-        id: 2,
-        message: 'New promotions are available for your next purchase!',
-        createdAt: '2025-04-22T09:12:33.000Z',
-        read: false,
-    },
-    {
-        id: 3,
-        message: "Don't forget to check out our new arrivals.",
-        createdAt: '2025-04-23T14:45:01.000Z',
-        read: true,
-    },
-]
+const fetcher = (url) => fetch(url).then((res) => res.json())
 
-function Notifications() {
-    const [notifications, setNotifications] = useState(mockNotifications)
+const Notifications = () => {
+    const [userId, setUserId] = useState(null)
 
-    const markAsRead = (id) => {
-        setNotifications((prevNotifications) =>
-            prevNotifications.map((notification) =>
-                notification.id === id
-                    ? { ...notification, read: true }
-                    : notification
-            )
-        )
+    useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem('user'))
+        if (storedUser?.userId) {
+            setUserId(storedUser.userId)
+        }
+    }, [])
+
+    const {
+        data: notifications,
+        mutate,
+        isLoading,
+    } = useSWR(userId ? `/api/notify/message/${userId}` : null, fetcher)
+
+    const markAsRead = async (id) => {
+        await fetch(`/api/notify/message/read/${id}`, {
+            method: 'PATCH',
+        })
+        mutate()
     }
 
-    const deleteNotification = (id) => {
-        setNotifications((prevNotifications) =>
-            prevNotifications.filter((notification) => notification.id !== id)
-        )
+    const deleteNotification = async (id) => {
+        await fetch(`/api/notify/message/${id}`, {
+            method: 'DELETE',
+        })
+        mutate()
     }
 
     return (
@@ -48,7 +41,13 @@ function Notifications() {
                 Notifications
             </h1>
 
-            {notifications.length === 0 ? (
+            {!userId ? (
+                <div className="text-center text-gray-500">
+                    Please log in to view notifications.
+                </div>
+            ) : isLoading ? (
+                <div className="text-center text-gray-500">Loading...</div>
+            ) : notifications?.length === 0 ? (
                 <div className="text-center text-gray-500">
                     No notifications
                 </div>
@@ -58,12 +57,15 @@ function Notifications() {
                         <div
                             key={notification.id}
                             className={`flex items-center justify-between rounded-md border p-4 ${
-                                notification.read ? 'bg-gray-100' : 'bg-blue-50'
+                                notification.isRead
+                                    ? 'bg-gray-100'
+                                    : 'bg-blue-50'
                             }`}
                         >
                             <div className="flex flex-col space-y-2">
-                                <p className="text-sm">
-                                    {notification.message}
+                                <p className="text-sm">{notification.title}</p>
+                                <p className="text-xs text-gray-700">
+                                    {notification.body}
                                 </p>
                                 <span className="text-xs text-gray-500">
                                     {new Date(
@@ -72,7 +74,7 @@ function Notifications() {
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
-                                {!notification.read && (
+                                {!notification.isRead && (
                                     <button
                                         onClick={() =>
                                             markAsRead(notification.id)
