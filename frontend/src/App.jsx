@@ -1,17 +1,56 @@
-import { useState } from "react";
+import {
+    RouterProvider,
+    createBrowserRouter,
+    createRoutesFromElements,
+    Route,
+} from 'react-router-dom'
 
-function App() {
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="text-center p-8 bg-white rounded-2xl shadow-lg max-w-md">
-        <h1 className="text-4xl font-bold text-indigo-600 mb-4">CraveDrop</h1>
-        <p className="text-gray-700 text-lg">
-          🚧 This site is currently under development. Stay tuned!
-        </p>
-        <p className="text-gray-700 text-xs">CraveDrop Development Team</p>
-      </div>
-    </div>
-  );
+import { Toaster } from 'react-hot-toast'
+
+import MainLayout from './Layouts/MainLayout'
+
+import HomePage from './Pages/HomePage'
+import NotFound from './Pages/NotFound'
+import Login from './Pages/Customer/LoginForm'
+import Register from './Pages/Customer/RegisterForm'
+import Dashboard from './Pages/Customer/UserDashboard'
+import Settings from './Pages/Customer/Settings'
+import Orders from './Pages/Customer/Orders'
+import Notifications from './Pages/Customer/Notifications'
+import SidebarLayout from './Layouts/SidebarLayout'
+import OrderSummary from './Pages/Customer/OrderSummary'
+
+const router = createBrowserRouter(
+    createRoutesFromElements(
+        <>
+            <Route path="/" element={<MainLayout />}>
+                <Route index element={<HomePage />} />
+
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+
+                <Route element={<SidebarLayout />}>
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="settings" element={<Settings />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="notifications" element={<Notifications />} />
+                    <Route path="/orders/:orderId" element={<OrderSummary />} />
+                </Route>
+
+                {/* Catch-all for 404 */}
+                <Route path="*" element={<NotFound />} />
+            </Route>
+        </>
+    )
+)
+
+const App = () => {
+    return (
+        <>
+            <RouterProvider router={router} />
+            <Toaster position="top-center" reverseOrder={false} />
+        </>
+    )
 }
 
-export default App;
+export default App
