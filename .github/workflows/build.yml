@@ -31,12 +31,7 @@ jobs:
       - name: Build and push
         uses: docker/bake-action@v6
         with:
-          # Points to your bake file - adjust if you named it differently
-          files: |
-            ./docker-bake.hcl
-          # Set to true to push images to registry
           push: true
-          # Optional: Override variables defined in the bake file
           set: |
             *.labels.org.opencontainers.image.created=${{ fromJSON(github.event.head_commit.timestamp || '"2025-04-27T10:34:00Z"') }}
             *.labels.org.opencontainers.image.revision=${{ github.sha }}
