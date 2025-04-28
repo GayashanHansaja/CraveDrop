@@ -4,13 +4,13 @@
 
 # **CraveDrop Delivery**
 > ***Food ordering and delivery platform built with microservices architecture.***
-> [![Docker Build](https://img.shields.io/badge/docker-build-blue)](https://hub.docker.com/)
-> [![Kubernetes Ready](https://img.shields.io/badge/k8s-ready-blueviolet)](https://kubernetes.io/)
-> [![License](https://img.shields.io/github/license/your-username/cravedrop-delivery)](./LICENSE)
-> [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)](https://www.postgresql.org/)
-> [![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Messaging-orange)](https://www.rabbitmq.com/)
 
 ---
+[![Docker Build](https://img.shields.io/badge/docker-build-blue)](https://hub.docker.com/)
+[![Kubernetes Ready](https://img.shields.io/badge/k8s-ready-blueviolet)](https://kubernetes.io/)
+[![License](https://img.shields.io/github/license/your-username/cravedrop-delivery)](./LICENSE)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)](https://www.postgresql.org/)
+[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Messaging-orange)](https://www.rabbitmq.com/)
 
 **CraveDrop** is a food ordering and delivery platform built with microservices architecture, enabling users to place orders, track deliveries, and interact with restaurants seamlessly.
 
