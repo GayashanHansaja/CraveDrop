@@ -95,6 +95,30 @@ export const getOrdersByRestaurant = async (req, res) => {
   }
 };
 
+//get order by user id
+export const getOrdersByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    // Find all orders for the specified user
+    const orders = await Order.find({ userId });
+
+    // If no orders found, return empty array with 200 status
+    if (!orders || orders.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error('Get user orders failed:', error);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
 // Rest of your controller functions remain the same
 export const getOrderById = async (req, res) => {
   try {

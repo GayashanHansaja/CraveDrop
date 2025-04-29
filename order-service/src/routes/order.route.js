@@ -5,7 +5,8 @@ import {
   updateOrder,
   deleteOrder,
   getAllOrders,
-  getOrdersByRestaurant
+  getOrdersByRestaurant,
+  getOrdersByUser,
 } from '../controller/order.controller.js';
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.put('/:id', updateOrder);
 router.delete('/:id', deleteOrder);
 router.get('/', getAllOrders); // Fetch all orders
 router.get('/restaurant/:restaurantId', getOrdersByRestaurant); // New endpoint for restaurant orders
+router.get('/user/:userId', getOrdersByUser);
 
 export default router;
